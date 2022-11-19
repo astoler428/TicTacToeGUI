@@ -33,7 +33,7 @@ public class TicTacToeGame implements ActionListener{
 		panel2 = new JPanel();
 		
 		label1 = new JLabel("Your Turn");
-		label2 = new JLabel("Opponent's Turn");
+		label2 = new JLabel("Opponents Turn");
 		
 		label1.setFont(new Font("Comic Sans", Font.BOLD, 25));
 		label2.setFont(new Font("Comic Sans", Font.BOLD, 25));
@@ -44,13 +44,9 @@ public class TicTacToeGame implements ActionListener{
 		panel1.setLayout(new GridLayout(1,1));
 		panel2.setLayout(new GridLayout(1,1));
 		
-
 		panel1.add(label1);
 		panel2.add(label2);
 		
-		//label1.setBounds(200, 20, 250, 40);
-		label2.setBounds(200, 20, 250, 40);
-
 		frame1.add(player1Panel);
 		frame1.add(panel1,BorderLayout.SOUTH);
 		frame2.add(player2Panel);

@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +12,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class TicTacToePlayerPanel extends JPanel implements ActionListener {
+public class TicTacToePlayerPanel extends JPanel {
 
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 600;
@@ -193,37 +192,5 @@ public class TicTacToePlayerPanel extends JPanel implements ActionListener {
 		}
 		else
 			g.drawLine(0, 0, 0, 0);
-	}
-
-	public void reset() {	//after game, resets moves, resets button visibility
-		myMoves.clear();
-		oppMoves.clear();
-		myButtons.clear();
-
-		
-		//winningButtons.clear();
-
-		turn = false;
-		
-		for(JButton button : listOfButtons)
-			button.setVisible(true);
-	}
-
-	public void actionPerformed(ActionEvent e) {
-
-		if(turn) {
-			JButton buttonPressed = (JButton) e.getSource();
-			buttonPressed.setVisible(false);			//make button invisible, helps see drawing too and prevents from being pressed
-			
-			lastButtonPressed = listOfButtons.indexOf(buttonPressed);	//find location of button pressed to make invisible in other board too
-
-			Point point = buttonPressed.getLocation();
-			
-			myMoves.add(point);	
-			myButtons.add(buttonPressed);
-
-			turn = false;
-			lastMove = point;			//this is so we can add the point to the other panel
-		}
 	}
 }
