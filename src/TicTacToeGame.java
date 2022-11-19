@@ -1,5 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,19 +15,16 @@ import javax.swing.SwingUtilities;
 
 public class TicTacToeGame implements ActionListener{ 
 	
-	//try revising where i pass an action listener into constructor of TicTacToePlayerPanel, so here can manage all actions
-	//here is another comment
-	
+
 	TicTacToePlayerPanel player1Panel, player2Panel;
 	MyFrame frame1, frame2;
 	JPanel panel1, panel2;
 	JLabel label1, label2;
-	JButton button1, button2;
 	Point point = null;
 
 	public TicTacToeGame() {
-		player1Panel = new TicTacToePlayerPanel(true);
-		player2Panel = new TicTacToePlayerPanel(false);
+		player1Panel = new TicTacToePlayerPanel(this, true);
+		player2Panel = new TicTacToePlayerPanel(this, false);
 
 		frame1 = new MyFrame("Player 1");
 		frame2 = new MyFrame("Player 2");
@@ -34,28 +33,23 @@ public class TicTacToeGame implements ActionListener{
 		panel2 = new JPanel();
 		
 		label1 = new JLabel("Your Turn");
-		label2 = new JLabel();
+		label2 = new JLabel("Opponent's Turn");
+		
+		label1.setFont(new Font("Comic Sans", Font.BOLD, 25));
+		label2.setFont(new Font("Comic Sans", Font.BOLD, 25));
+		
+		label1.setHorizontalAlignment(JLabel.CENTER);
+		label2.setHorizontalAlignment(JLabel.CENTER);
 
-		button1 = new JButton("Make Move");
-		button2 = new JButton("Make Move");
+		panel1.setLayout(new GridLayout(1,1));
+		panel2.setLayout(new GridLayout(1,1));
 		
-		button1.addActionListener(this);
-		button2.addActionListener(this);
-		
-		panel1.setLayout(null);
-		panel2.setLayout(null);
 
-		panel1.add(button1);
-		panel2.add(button2);
-		
 		panel1.add(label1);
 		panel2.add(label2);
 		
-		button1.setBounds(250, 10, 100, 50);
-		label1.setBounds(267, 60, 100, 40);
-		
-		button2.setBounds(250, 10, 100, 50);
-		label2.setBounds(267, 60, 100, 40);
+		//label1.setBounds(200, 20, 250, 40);
+		label2.setBounds(200, 20, 250, 40);
 
 		frame1.add(player1Panel);
 		frame1.add(panel1,BorderLayout.SOUTH);
@@ -71,7 +65,7 @@ public class TicTacToeGame implements ActionListener{
 		frame2.setVisible(true);
 	}
 	
-	public boolean gameOver() {				//edit this to check for actual winning!
+	public boolean gameOver() {				
 		boolean toReturn = false;
 		
 		List<JButton> list = null;
@@ -92,11 +86,6 @@ public class TicTacToeGame implements ActionListener{
 			toReturn = true;
 		
 		return toReturn;
-		
-		/*
-		 * Have a list of lists containing winning sequences of points
-		 * If myMoves contains any of the lists in winning lists, you win
-		 */
 	}
 	
 	private boolean tie() {
@@ -107,8 +96,8 @@ public class TicTacToeGame implements ActionListener{
 		frame1.remove(player1Panel);
 		frame2.remove(player2Panel);
 		
-		player1Panel = new TicTacToePlayerPanel(true);
-		player2Panel = new TicTacToePlayerPanel(false);
+		player1Panel = new TicTacToePlayerPanel(this, true);
+		player2Panel = new TicTacToePlayerPanel(this, false);
 		
 		frame1.add(player1Panel);
 		frame2.add(player2Panel);
@@ -119,51 +108,53 @@ public class TicTacToeGame implements ActionListener{
 		label1.setText("Your Turn");
 		label2.setText("");
 	}
+	
+	private void performTurn(JButton button, TicTacToePlayerPanel myTurn, TicTacToePlayerPanel oppTurn) {
+	
+		int idx = myTurn.getListOfButtons().indexOf(button);	//find location of button pressed to make invisible in other board too
+		
+		myTurn.turnOffButton(idx);
+		oppTurn.turnOffButton(idx);
+		
+		myTurn.addMyMove(button.getLocation());
+		oppTurn.addOppMove(button.getLocation());
+		myTurn.addMyButton(button);
+		myTurn.setTurn(false);
+		oppTurn.setTurn(true);	
+	}
 
 	public void actionPerformed(ActionEvent e) {
+		
+		JButton buttonPressed = (JButton) e.getSource();
 
-		if ((point = player1Panel.getLastMove()) != null && e.getSource() == button1) {	//if no button was pressed this will be null
-			player2Panel.addOppMove(point);
-			player2Panel.setTurn(true);	//sets other players turn, this got turned off when button was pressed
-			player2Panel.turnOffButton(player1Panel.getLastButtonPressed()); //turn off button in same spot
-			player1Panel.setLastMove(null); //sets this move to null so now a new button needs to be pressed
+		
+		if(player1Panel.getListOfButtons().contains(e.getSource()) && player1Panel.isTurn()) {
+			performTurn(buttonPressed, player1Panel, player2Panel);	
+			label1.setText("Opponent's Turn");
 			label2.setText("Your Turn");
-			label1.setText("");
-		}
-		else if ((point = player2Panel.getLastMove()) != null && e.getSource() == button2) {
-			player1Panel.addOppMove(point);
-			player1Panel.setTurn(true);
-			player1Panel.turnOffButton(player2Panel.getLastButtonPressed());
-			player2Panel.setLastMove(null);
-			label1.setText("Your Turn");
-			label2.setText("");
 		}
 		
+		if(player2Panel.getListOfButtons().contains(e.getSource()) && player2Panel.isTurn()) {
+			performTurn(buttonPressed, player2Panel, player1Panel);
+			label2.setText("Opponent's Turn");
+			label1.setText("Your Turn");
+		}
+			
+	
 		if(gameOver()) {
 			
 			String message = "";
 			
-			if(e.getSource() == button1 && player1Panel.win() != null) //means player1 made the last move and won
+			if(player1Panel.win() != null) //means player1 made the last move and won
 				message = "Player 1 wins!";
-			else if(e.getSource() == button2 && player2Panel.win() != null)
+			else if(player2Panel.win() != null)
 				message = "Player 2 wins!";
 			else	//means it was a draw
 				message = "Draw.";
 			
 			int again = JOptionPane.showConfirmDialog(null, message + " Play Again?");	//edit this to say who wins or tie!
-			if (again == JOptionPane.YES_OPTION) {
-//				player1Panel.reset();
-//				player2Panel.reset();
-//				
-//				if(e.getSource() == button1)		//other player starts this time
-//					player2Panel.setTurn(true);
-//				else
-//					player1Panel.setTurn(true);
-				
-				resetGame();
-			}
-	
-				
+			if (again == JOptionPane.YES_OPTION) 
+				resetGame();	
 			else
 				System.exit(0);
 		}

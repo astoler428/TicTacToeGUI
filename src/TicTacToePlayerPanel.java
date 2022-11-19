@@ -13,8 +13,6 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-//will this change stay?
-
 public class TicTacToePlayerPanel extends JPanel implements ActionListener {
 
 	private static final int WIDTH = 600;
@@ -36,7 +34,7 @@ public class TicTacToePlayerPanel extends JPanel implements ActionListener {
 
 	Point lastMove; //stores the upper right corner of button that was just pressed
 
-	public TicTacToePlayerPanel(boolean turn) { // set turn
+	public TicTacToePlayerPanel(ActionListener l, boolean turn) { // set turn
 		this.turn = turn;
 
 		if (turn) {
@@ -82,7 +80,7 @@ public class TicTacToePlayerPanel extends JPanel implements ActionListener {
 		winningCombos.add(Arrays.asList(b3,b5,b7));
 		
 		for(JButton button : listOfButtons) {
-			button.addActionListener(this);
+			button.addActionListener(l);
 			add(button);
 		}
 	}
@@ -96,6 +94,10 @@ public class TicTacToePlayerPanel extends JPanel implements ActionListener {
 		return toReturn;	
 	}
 	
+	public List<JButton> getListOfButtons() {
+		return listOfButtons;
+	}
+
 	public void setWinningButtons(List<JButton> winningButtons) {
 		this.winningButtons = winningButtons;
 		repaint();
@@ -131,6 +133,14 @@ public class TicTacToePlayerPanel extends JPanel implements ActionListener {
 
 	public void addOppMove(Point point) {
 		oppMoves.add(point);
+	}
+	
+	public void addMyMove(Point point) {
+		myMoves.add(point);
+	}
+	
+	public void addMyButton(JButton button) {
+		myButtons.add(button);
 	}
 
 	public void paintComponent(Graphics g) {
