@@ -14,7 +14,8 @@ import javax.swing.SwingUtilities;
 public class TicTacToeGame implements ActionListener{ 
 	
 	//try revising where i pass an action listener into constructor of TicTacToePlayerPanel, so here can manage all actions
-
+	//here is another comment
+	
 	TicTacToePlayerPanel player1Panel, player2Panel;
 	MyFrame frame1, frame2;
 	JPanel panel1, panel2;
