@@ -102,7 +102,7 @@ public class TicTacToeGame implements ActionListener{
 		SwingUtilities.updateComponentTreeUI(frame2);
 		
 		label1.setText("Your Turn");
-		label2.setText("");
+		label2.setText("Opponent's Turn");
 	}
 	
 	private void performTurn(JButton button, TicTacToePlayerPanel myTurn, TicTacToePlayerPanel oppTurn) {

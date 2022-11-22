@@ -2,10 +2,13 @@ import java.awt.*;
 import javax.swing.*;
 
 public class BullseyePanel extends JPanel {
+	
+	JLabel label = new JLabel("HELLO");
 
 	public BullseyePanel() {
 		this.setPreferredSize(new Dimension(300, 300));
 		this.setBackground(Color.gray);
+		this.add(label, BorderLayout.SOUTH);
 	}
 
 	public void paint(Graphics g) {
@@ -24,13 +27,13 @@ public class BullseyePanel extends JPanel {
 		g.setColor(Color.red);
 		g.fillOval(5*step,5*step, 300-2*5*step, 300-2*5*step);
 		
-		
+		System.out.println("hi");
 
 
 	}
 
 	public static void main(String[] args) {
-		MyFrame frame = new MyFrame();
+		JFrame frame = new JFrame();
 		frame.add(new BullseyePanel());
 		frame.pack();
 		frame.setVisible(true);

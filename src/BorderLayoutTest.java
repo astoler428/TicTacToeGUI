@@ -1,8 +1,11 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class BorderLayoutTest {
@@ -13,12 +16,27 @@ public class BorderLayoutTest {
 		frame.setSize(500, 500);
 		
 		JPanel panel1 = new JPanel();
+		panel1.setLayout(new BorderLayout());
 		panel1.setBackground(Color.blue);
 		panel1.setPreferredSize(new Dimension(100, 100));
+		JLabel label1 = new JLabel("hello");
+		
+		label1.setBorder(BorderFactory.createLineBorder(Color.green));		
+//		label1.setVerticalAlignment(JLabel.BOTTOM);
+//		label1.setHorizontalAlignment(JLabel.CENTER);
+		
+		JLabel label2 = new JLabel("hi");
+		label2.setBorder(BorderFactory.createLineBorder(Color.yellow));
+		
+
+
+
+		panel1.add(label1,BorderLayout.NORTH);
+		panel1.add(label2, BorderLayout.SOUTH);
 		
 		JPanel panel2 = new JPanel();
 		panel2.setBackground(Color.green);
-		panel2.setPreferredSize(new Dimension(100, 100));
+		panel2.setPreferredSize(new Dimension(100, 400));
 		
 		JPanel panel3 = new JPanel();
 		panel3.setBackground(Color.red);
@@ -32,7 +50,7 @@ public class BorderLayoutTest {
 		panel5.setBackground(Color.black);
 		panel5.setPreferredSize(new Dimension(100, 100));
 		
-		frame.setLayout(new BorderLayout(20, 30));
+		frame.setLayout(new BorderLayout());
 		
 		
 
