@@ -13,14 +13,21 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-public class TicTacToeGame implements ActionListener{ 
-	
+//each Frame contains a TicTacToePlayerPanel and a JPanel containing a JLabel saying who's turn it is
 
+public class TicTacToeGame implements ActionListener{ 
+
+	public static void main(String[] args) {
+		new TicTacToeGame();
+	}
+	
 	TicTacToePlayerPanel player1Panel, player2Panel;
 	MyFrame frame1, frame2;
 	JPanel panel1, panel2;
 	JLabel label1, label2;
 	Point point = null;
+
+	//constructor: sets up the two frames
 
 	public TicTacToeGame() {
 		player1Panel = new TicTacToePlayerPanel(this, true);
@@ -64,6 +71,7 @@ public class TicTacToeGame implements ActionListener{
 	public boolean gameOver() {				
 		boolean toReturn = false;
 		
+		//list will contain the set of winning buttons
 		List<JButton> list = null;
 		
 		if((list = player1Panel.win()) != null) {
@@ -88,6 +96,8 @@ public class TicTacToeGame implements ActionListener{
 		return player1Panel.getNumMoves() + player2Panel.getNumMoves() == 9;
 	}
 	
+	//if user selects play again:
+	
 	private void resetGame() {
 		frame1.remove(player1Panel);
 		frame2.remove(player2Panel);
@@ -104,14 +114,20 @@ public class TicTacToeGame implements ActionListener{
 		label1.setText("Your Turn");
 		label2.setText("Opponent's Turn");
 	}
+
+	//method called when move is made
 	
 	private void performTurn(JButton button, TicTacToePlayerPanel myTurn, TicTacToePlayerPanel oppTurn) {
 	
-		int idx = myTurn.getListOfButtons().indexOf(button);	//find location of button pressed to make invisible in other board too
+		//find the index of button pressed to make invisible in other board too
+
+		int idx = myTurn.getListOfButtons().indexOf(button);	
 		
+		//can't be clicked on again
 		myTurn.turnOffButton(idx);
 		oppTurn.turnOffButton(idx);
 		
+		//add moves and change turns
 		myTurn.addMyMove(button.getLocation());
 		oppTurn.addOppMove(button.getLocation());
 		myTurn.addMyButton(button);
@@ -119,11 +135,13 @@ public class TicTacToeGame implements ActionListener{
 		oppTurn.setTurn(true);	
 	}
 
+	//event listener for button clicked
+
 	public void actionPerformed(ActionEvent e) {
-		
 		JButton buttonPressed = (JButton) e.getSource();
 
-		
+		//only respond to click if it's the players turn who clicked the button
+
 		if(player1Panel.getListOfButtons().contains(e.getSource()) && player1Panel.isTurn()) {
 			performTurn(buttonPressed, player1Panel, player2Panel);	
 			label1.setText("Opponent's Turn");
@@ -136,9 +154,12 @@ public class TicTacToeGame implements ActionListener{
 			label1.setText("Your Turn");
 		}
 			
-	
+		//check game over - could be a tie
+
 		if(gameOver()) {
 			
+			//message will be displayed in the popup dialog box
+
 			String message = "";
 			
 			if(player1Panel.win() != null) //means player1 made the last move and won
@@ -148,17 +169,12 @@ public class TicTacToeGame implements ActionListener{
 			else	//means it was a draw
 				message = "Draw.";
 			
-			int again = JOptionPane.showConfirmDialog(null, message + " Play Again?");	//edit this to say who wins or tie!
+			int again = JOptionPane.showConfirmDialog(null, message + " Play Again?");
 			if (again == JOptionPane.YES_OPTION) 
 				resetGame();	
 			else
 				System.exit(0);
 		}
-	}
-
-	public static void main(String[] args) {
-		new TicTacToeGame();
-
 	}
 
 }

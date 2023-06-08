@@ -12,28 +12,40 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+//Board is represented by 9 buttons the user can click on
+
 public class TicTacToePlayerPanel extends JPanel {
 
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 600;
 	private static final int SQUARE_SIZE = HEIGHT / 3;
+
 	private List<JButton> listOfButtons = new ArrayList<>();
 	private JButton b1, b2, b3, b4, b5, b6, b7, b8, b9;
+
+	//to check for win, store a list of possible lists of buttons that would win
 	private List<List<JButton>> winningCombos = new ArrayList<>();
-	private List<JButton> winningButtons = new ArrayList<>();	//will eventually store winning list of buttons
+	//will eventually store winning list of buttons to display the line through
+	private List<JButton> winningButtons = new ArrayList<>();	
 
 	private boolean turn;
 	private int lastButtonPressed;
 
-	List<JButton> myButtons = new ArrayList<>(); //holds the buttons i've pressed
+	//holds the buttons i've pressed
+	List<JButton> myButtons = new ArrayList<>(); 
+	//holds the coordinates of the points for our moves
 	List<Point> myMoves = new ArrayList<>();
 	List<Point> oppMoves = new ArrayList<>();
+	//these will point to the proper moves
 	List<Point> xMoves;
-	List<Point> oMoves; //these will point to the proper moves
+	List<Point> oMoves; 
 
-	Point lastMove; //stores the upper right corner of button that was just pressed
+	//stores the upper right corner of button that was just pressed
+	Point lastMove; 
 
-	public TicTacToePlayerPanel(ActionListener l, boolean turn) { // set turn
+	//constructor
+
+	public TicTacToePlayerPanel(ActionListener l, boolean turn) { 
 		this.turn = turn;
 
 		if (turn) {
@@ -46,8 +58,13 @@ public class TicTacToePlayerPanel extends JPanel {
 
 		lastMove = null;  
 
+		//setup GUI panel size and layout
+
 		this.setSize(WIDTH, HEIGHT);
 		this.setLayout(new GridLayout(3, 3, 0, 0));
+
+		//initialize buttons
+
 		b1 = new JButton();
 		b2 = new JButton();
 		b3 = new JButton();
@@ -58,6 +75,8 @@ public class TicTacToePlayerPanel extends JPanel {
 		b8 = new JButton();
 		b9 = new JButton();
 		
+		//add buttons to listOfButtons
+
 		listOfButtons.add(b1);
 		listOfButtons.add(b2);
 		listOfButtons.add(b3);
@@ -68,6 +87,7 @@ public class TicTacToePlayerPanel extends JPanel {
 		listOfButtons.add(b8);
 		listOfButtons.add(b9);
 		
+		//create winning combos
 		
 		winningCombos.add(Arrays.asList(b1,b2,b3));
 		winningCombos.add(Arrays.asList(b4,b5,b6));
@@ -78,12 +98,15 @@ public class TicTacToePlayerPanel extends JPanel {
 		winningCombos.add(Arrays.asList(b1,b5,b9));
 		winningCombos.add(Arrays.asList(b3,b5,b7));
 		
+		//add actionListener to each button and add buttons to panel
+
 		for(JButton button : listOfButtons) {
 			button.addActionListener(l);
-			add(button);
+			this.add(button);
 		}
 	}
 	
+	//checks if I have won by seeing my my list of buttons contains everything in any of the winning combos
 	public List<JButton> win() {
 		List<JButton> toReturn = null;
 		for(List<JButton> list : winningCombos)
@@ -93,10 +116,12 @@ public class TicTacToePlayerPanel extends JPanel {
 		return toReturn;	
 	}
 	
+	//getter for all 9 buttons
 	public List<JButton> getListOfButtons() {
 		return listOfButtons;
 	}
 
+	//setter for when 3 winning buttons have been found so the line can be pained through
 	public void setWinningButtons(List<JButton> winningButtons) {
 		this.winningButtons = winningButtons;
 		repaint();
@@ -142,14 +167,16 @@ public class TicTacToePlayerPanel extends JPanel {
 		myButtons.add(button);
 	}
 
+
 	public void paintComponent(Graphics g) {
 		
 		super.paintComponent(g);
 
-
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setStroke(new BasicStroke(5));	//paints the board
+		g2d.setStroke(new BasicStroke(5));	
 		
+		//painting the 4 tic tac toe lines
+
 		g2d.drawLine(WIDTH / 3, 0, WIDTH / 3, HEIGHT);
 		g2d.drawLine(2 * WIDTH / 3, 0, 2 * WIDTH / 3, HEIGHT);
 		g2d.drawLine(0, HEIGHT / 3, WIDTH, HEIGHT / 3);
@@ -167,18 +194,22 @@ public class TicTacToePlayerPanel extends JPanel {
 			drawO(g2d, (int) p.getX(), (int) p.getY());
 	}
 
+	//draws an x based on the starting point
 	public void drawX(Graphics2D g, int x, int y) {
 		g.setColor(Color.blue);
 		g.drawLine(x, y, x + SQUARE_SIZE, y + SQUARE_SIZE);
 		g.drawLine(x + SQUARE_SIZE, y, x, y + SQUARE_SIZE);
 	}
 
+	//draws an o based on the center
 	public void drawO(Graphics2D g, int x, int y) {
 		g.setColor(Color.red);
 		g.drawOval(x, y, SQUARE_SIZE, SQUARE_SIZE);
 	}
 	
-	public void drawWin(Graphics2D g) { // usually null but will try to draw it
+	//draws the line through the winning combo if it exists
+	public void drawWin(Graphics2D g) { 
+		// usually null but will try to draw it
 		if (!winningButtons.isEmpty()) {	
 			Point startLocation = winningButtons.get(0).getLocation();
 			Point endLocation = winningButtons.get(2).getLocation();
